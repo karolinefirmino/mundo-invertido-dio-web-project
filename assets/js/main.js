@@ -1,6 +1,6 @@
 
-import { subscribeToHellfireClub } from './firebase/hellfire-club.js'
-console.log(app)
+import { getHellfireClubSubscriptions, subscribeToHellfireClub } from './firebase/hellfire-club.js'
+
 
 const txtName = document.getElementById('txtName')
 const txtEmail = document.getElementById('txtEmail')
@@ -9,7 +9,7 @@ const txtCharacter = document.getElementById('txtCharacter')
 
 const btnSubscribe = document.getElementById('btnSubscribe')
 
-btnSubscribe.addEventListener('click', () => {
+btnSubscribe.addEventListener('click', async () => {
     const subscription = {
         name: txtName.value,
         email: txtEmail.value,
@@ -18,5 +18,21 @@ btnSubscribe.addEventListener('click', () => {
     }
 
     // Salvar no Banco de Dados:
-    subscribeToHellfireClub(subscription)
+    const subscriptionId = await subscribeToHellfireClub(subscription)
+    console.log(`Inscrito com sucesso: ${subscription}`)
+
+    // Resetar inputs do Formulário
+    txtName.value = ''
+    txtEmail.value = ''
+    txtLevel.value = ''
+    txtCharacter.value = ''
+
+    alert(`Inscrito com sucesso: ${subscriptionId}`)
 })
+
+async function loadData() {
+    const subscriptions = await getHellfireClubSubscriptions()
+    console.log(subscriptions)
+}
+
+loadData()
